@@ -16,6 +16,34 @@ OPERATIONS = {
     "facilitymanager":"完成电源线标识检查规范情况",
 }
 
+class maintain_machineroom(osv.osv):
+    _name = "maintain.machineroom"
+    _columns = {
+        "name":fields.char(string="Name",required=True,size=100),
+        "remark":fields.char(string="Remark",size=500,required=True),
+        "racks":fields.one2many("maintain.machineroom.rack","machineroom_id",strin="Racks"),
+    }
+maintain_machineroom()
+
+class maintain_machineroom_rack(osv.osv):
+    _name = "maintain.machineroom.rack"
+    _columns = {
+        "name":fields.char(string="Name",size=200,required=True),
+        "machineroom_id":fields.many2one("maintain.machineroom",string="Machine room",required=True),
+        "remark":fields.char(string="Remark",size=500,required=False),
+        "ports":fields.one2many("maintain.machineroom.rack.port","machineroom_rack_id",string="Ports"),
+    }
+maintain_machineroom_rack()
+
+class maintain_machineroom_rack_port(osv.osv):
+    _name = "maintain.machineroom.rack.port"
+    _columns = {
+        "name":fields.char(string="Name",size=200,required=True),
+        "machineroom_rack_id":fields.many2one("maintain.machineroom.rack",string="Machine room",required=True),
+        "remark":fields.char(string="Remark",size=500,required=False),
+    }
+maintain_machineroom_rack_port()
+
 class maintain_putaway(osv.osv):
     _name = "maintain.putaway"
     _description = "putaway"
@@ -91,9 +119,9 @@ class maintain_putaway(osv.osv):
         "name":fields.char(string="ProcessId",size=100,required=True),
         "applydate":fields.datetime(string="Apply Date",required=True),
         "asset_id":fields.many2one("cmdb.asset",string="Asset",required=True),
-        "machine":fields.char(string="Machine Room"),
-        "rack":fields.char(string="Rock number"),
-        "port":fields.char(string="Port"),
+        "machineroom":fields.many2one("maintain.machineroom",string="Machine Room"),
+        "machinerack":fields.many2one("maintain.machineroom.rack",string="Machine Rack"),
+        "machineport":fields.many2one("maintain.machineroom.rack.port",string="Port"),
         "pdunumber":fields.char(string="PDU Number"),
         "state":fields.selection([
             ("cancel","Cancel"),
