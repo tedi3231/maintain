@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="wkf_putaway" model="workflow">
+			<field name="name">maintain.putaway.basic</field>
+			<field name="osv">maintain.putaway</field>
+			<field name="on_create">True</field>
+		</record>
+
+		<record id="act_draft" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="flow_start">True</field>
+			<field name="name">draft</field>
+		</record>
+		<record id="act_devicemanager" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_devicemanager</field>
+		</record>
+		<record id="act_networkmanager" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_networkmanager</field>
+		</record>
+		<record id="act_machineroommanager" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_machineroommanager</field>
+		</record>
+		<record id="act_machineroomwatchkeeper" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_machineroomwatchkeeper</field>
+		</record>
+		<record id="act_devicemanager2" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_devicemanager2</field>
+		</record>
+		<record id="act_networkmanger2" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_networkmanger2</field>
+		</record>
+		<record id="act_assetmanager" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_assetmanager</field>
+		</record>
+		<record id="act_facilitymanager" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">wait_facilitymanager</field>
+		</record>
+		<record id="act_done" model="workflow.activity">
+			<field name="wkf_id" ref="wkf_putaway"/>
+			<field name="name">done</field>
+			<field name="flow_stop">True</field>
+			<field name="kind">stopall</field>
+		</record>
+
+		<record id="trans_draft_devicemanager" model="workflow.transition">
+			<field name="act_from" ref="act_draft"/>
+			<field name="act_to" ref="act_devicemanager"/>
+			<field name="signal">devicemanager_sign</field>
+		</record>
+
+		<record id="trans_devicemanager_networkmanager" model="workflow.transition">
+			<field name="act_from" ref="act_devicemanager"/>
+			<field name="act_to" ref="act_networkmanager"/>
+			<field name="signal">networkmanager_sign</field>
+		</record>
+		<record id="trans_networkmanager_machineroommanager" model="workflow.transition">
+			<field name="act_from" ref="act_networkmanager"/>
+			<field name="act_to" ref="act_machineroommanager"/>
+			<field name="signal">machineroom_manager_sign</field>
+		</record>
+
+		<record id="trans_machineroommanager_machineroomwatchkeeper" model="workflow.transition">
+			<field name="act_from" ref="act_machineroommanager"/>
+			<field name="act_to" ref="act_machineroomwatchkeeper"/>
+			<field name="signal">machineroomwatchkeeper_sign</field>
+		</record>
+
+		<record id="trans_machineroomwatchkeeper_devicemanager2" model="workflow.transition">
+			<field name="act_from" ref="act_machineroomwatchkeeper"/>
+			<field name="act_to" ref="act_devicemanager2"/>
+			<field name="signal">devicemanager2_sign</field>
+		</record>
+
+		<record id="trans_devicemanager2_networkmanager2" model="workflow.transition">
+			<field name="act_from" ref="act_devicemanager2"/>
+			<field name="act_to" ref="act_networkmanger2"/>
+			<field name="signal">networkmanger2_sign</field>
+		</record>
+
+		<record id="trans_networkmanager2_assetmanager" model="workflow.transition">
+			<field name="act_from" ref="act_networkmanger2"/>
+			<field name="act_to" ref="act_assetmanager"/>
+			<field name="signal">assetmanager_sign</field>
+		</record>
+
+		<record id="trans_assetmanager_facilitymanager" model="workflow.transition">
+			<field name="act_from" ref="act_assetmanager"/>
+			<field name="act_to" ref="act_facilitymanager"/>
+			<field name="signal">facilitymanager_sign</field>
+		</record>
+
+		<record id="trans_facilitymanager_done" model="workflow.transition">
+			<field name="act_from" ref="act_facilitymanager"/>
+			<field name="act_to" ref="act_done"/>
+			<field name="signal">done</field>
+		</record>
+
+	</data>
+</openerp>

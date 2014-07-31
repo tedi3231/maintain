@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="maintain_putaway_form" model="ir.ui.view">
+			<field name="name">maintain.putaway.form</field>
+			<field name="model">maintain.putaway</field>
+			<field name="arch" type="xml">
+				<form string="Putaway" version="7.0">
+					<header>
+						<button name="device_manager_sign" type="object" states="draft" string="设备管理员签名" class="oe_highlight"/>
+						<button name="network_manager_sign" states="devicemanager" string="网络管理员签名" class="oe_highlight"/>
+						<button name="machineroommanager_sign" states="networkmanagersign" string="机房管理员签名" class="oe_highlight"/>
+						<button name="machineroomwatchkeeper_sign" states="machineroommanager" string="机房值班员签名" class="oe_highlight"/>
+						<button name="devicemanager2_sign" states="machineroomwatchkeeper" string="设备理员签名" class="oe_highlight"/>
+						<button name="networkmanger2_sign" states="devicemanager2" string="网络管理员签名" class="oe_highlight"/>
+						<button name="assetmanager_sign" states="networkmanger2" string="资产管理员签名" class="oe_highlight"/>
+						<button name="facilitymanager_sign" states="assetmanager" string="设施管理员签名" class="oe_highlight"/>
+						<button name="done" states="facilitymanager" string="完成上架" class="oe_highlight"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,devicemanager,networkmanagersign,machineroommanager,machineroomwatchkeeper,devicemanager2,networkmanger2,assetmanager,facilitymanager"/>
+					</header>
+					<sheet>
+						<group col="4">
+							<field name="name"/>
+							<field name="applydate"/>
+							<field name="asset_id"/>
+						</group>
+						<group col="4">
+							<field name="machine" string="机房"/>
+							<field name="rack" string="机柜"/>
+							<field name="port" string="机位"/>
+							<field name="pdunumber" string="PDU编号"/>
+						</group>
+						<group col="4" string="Remark">
+							<field name="remark" placeholder="Remark...." colspan="4" nolabel="1"/>
+						</group>
+						<notebook>
+							<page string="Operations">
+								<field name="putaway_logs">
+									<tree string="Operations" version="7.0" editable="bottom">
+										<field name="operation"/>
+										<field name="responsible"/>
+										<field name="operation_time"/>
+										<field name="name"/>
+									</tree>
+								</field>						
+							</page>
+						</notebook>
+					</sheet>	
+				</form>
+			</field>
+		</record>
+
+
+		<record id="maintain_repairorder_form" model="ir.ui.view">
+			<field name="name">maintain.repairorder.form</field>
+			<field name="model">maintain.repairorder</field>
+			<field name="arch" type="xml">
+				<form string="Repair Order" version="7.0">
+					<sheet>
+						<group col="4">
+							<field name="name"/>
+							<field name="maintainer"/>
+							<field name="assettorepair"/>
+						</group>
+						<group col="4" string="Remark">
+							<field name="remark" placeholder="Remark...." colspan="4" nolabel="1"/>
+						</group>
+						<notebook>
+							<page string="Operations">
+								<field name="operations">
+									<tree string="Operations" version="7.0" editable="bottom">
+										<field name="type"/>
+										<field name="product_id"/>
+										<field name="name"/>
+										<field name="operation_time"/>
+									</tree>
+								</field>						
+							</page>
+						</notebook>
+					</sheet>	
+				</form>
+			</field>
+		</record>
+
+		<record id="action_maintain_repairorder_form_show" model="ir.actions.act_window">
+			<field name="name">Maintain Repairorder</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintain.repairorder</field>
+			<field name="domain">[]</field>
+			<field name="view_type">form</field>
+		</record>
+		
+		<record id="action_maintain_putaway_form_show" model="ir.actions.act_window">
+			<field name="name">Putaway</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">maintain.putaway</field>
+			<field name="domain">[]</field>
+			<field name="view_type">form</field>
+		</record>
+
+		<menuitem id="menu_maintain_root" name="Maintain" parent="CMDB.menu_cmdb_root" sequence="40"/>
+		<menuitem id="menu_maintain_repairorder" name="Repair orders" parent="menu_maintain_root" sequence="40" action="action_maintain_repairorder_form_show"/>
+
+		<menuitem id="menu_putaway_root" name="Putaways" parent="CMDB.menu_cmdb_root" sequence="40"/>
+		<menuitem id="menu_maintain_putaway" name="Putaways" parent="menu_putaway_root" sequence="40" action="action_maintain_putaway_form_show"/>
+	</data>
+</openerp>
