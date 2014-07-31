@@ -5,16 +5,33 @@ from openerp.tools.translate import _
 from openerp.modules.registry import RegistryManager
 import datetime
 
+OPERATIONS = {
+    "devicemanager":"市电预加电正常",
+    "networkmanager":"",
+    "machineroommanager":"",
+    "machineroomwatchkeeper":"以上信息完整，准许设备进入机房上回。",
+    "devicemanager2":"设备、走线、设备标设符合规范",
+    "networkmanger2":"完成网络标识",
+    "assetmanager":"完成财产标识",
+    "facilitymanager":"完成电源线标识检查规范情况",
+}
+
 class maintain_putaway(osv.osv):
     _name = "maintain.putaway"
     _description = "putaway"
 
     def device_manager_sign(self,cr,uid,ids,context=None):
-        print "device_manager_sign called"
+        #print "device_manager_sign called"
+        print "context is %s" % context
+        state = context.get("nextstate")
+        role = context.get("role")
+        operation = OPERATIONS.get(role)
+        
         operation_rep = self.pool.get("maintain.putaway.log")
         id = ids and ids[0]
-        operation_rep.create(cr,uid,{"putaway_id":id,"operation":"市电预回电正常。","responsible":uid},context=context)
-        return self.write(cr,uid,ids,{"state":"devicemanager"})
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":operation,"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{"state":state})
+
 
     _columns = {
         "name":fields.char(string="ProcessId",size=100,required=True),

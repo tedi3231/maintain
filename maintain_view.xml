@@ -7,16 +7,17 @@
 			<field name="arch" type="xml">
 				<form string="Putaway" version="7.0">
 					<header>
-						<button name="device_manager_sign" type="object" states="draft" string="设备管理员签名" class="oe_highlight"/>
-						<button name="network_manager_sign" states="devicemanager" string="网络管理员签名" class="oe_highlight"/>
-						<button name="machineroommanager_sign" states="networkmanagersign" string="机房管理员签名" class="oe_highlight"/>
-						<button name="machineroomwatchkeeper_sign" states="machineroommanager" string="机房值班员签名" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="draft" string="设备管理员签名" context="{'role':'devicemanager','nextstate':'networkmanager'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="devicemanager" string="网络管理员签名" context="{'role':'networkmanager','nextstate':'machineroommanager'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="networkmanager" string="机房管理员签名" context="{'role':'machineroommanager','nextstate':'machineroomwatchkeeper'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="machineroommanager" string="机房值班员签名" context="{'role':'machineroommanager','nextstate':'devicemanager2'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="networkmanagersign" string="机房管理员签名" context="{'role':'machineroommanager','nextstate':'machineroomwatchkeeper'}" class="oe_highlight"/>
 						<button name="devicemanager2_sign" states="machineroomwatchkeeper" string="设备理员签名" class="oe_highlight"/>
 						<button name="networkmanger2_sign" states="devicemanager2" string="网络管理员签名" class="oe_highlight"/>
 						<button name="assetmanager_sign" states="networkmanger2" string="资产管理员签名" class="oe_highlight"/>
 						<button name="facilitymanager_sign" states="assetmanager" string="设施管理员签名" class="oe_highlight"/>
 						<button name="done" states="facilitymanager" string="完成上架" class="oe_highlight"/>
-						<field name="state" widget="statusbar" statusbar_visible="draft,devicemanager,networkmanagersign,machineroommanager,machineroomwatchkeeper,devicemanager2,networkmanger2,assetmanager,facilitymanager"/>
+						<field name="state" widget="statusbar" statusbar_visible="devicemanager,networkmanager,machineroommanager,machineroomwatchkeeper,devicemanager2,networkmanger2,assetmanager,facilitymanager"/>
 					</header>
 					<sheet>
 						<group col="4">
