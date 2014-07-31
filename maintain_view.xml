@@ -7,23 +7,34 @@
 			<field name="arch" type="xml">
 				<form string="Putaway" version="7.0">
 					<header>
-						<button name="device_manager_sign" type="object" states="draft" string="设备管理员签名" context="{'role':'devicemanager','nextstate':'networkmanager'}" class="oe_highlight"/>
-						<button name="device_manager_sign" type="object" states="devicemanager" string="网络管理员签名" context="{'role':'networkmanager','nextstate':'machineroommanager'}" class="oe_highlight"/>
-						<button name="device_manager_sign" type="object" states="networkmanager" string="机房管理员签名" context="{'role':'machineroommanager','nextstate':'machineroomwatchkeeper'}" class="oe_highlight"/>
-						<button name="device_manager_sign" type="object" states="machineroommanager" string="机房值班员签名" context="{'role':'machineroommanager','nextstate':'devicemanager2'}" class="oe_highlight"/>
-						<button name="device_manager_sign" type="object" states="networkmanagersign" string="机房管理员签名" context="{'role':'machineroommanager','nextstate':'machineroomwatchkeeper'}" class="oe_highlight"/>
-						<button name="devicemanager2_sign" states="machineroomwatchkeeper" string="设备理员签名" class="oe_highlight"/>
-						<button name="networkmanger2_sign" states="devicemanager2" string="网络管理员签名" class="oe_highlight"/>
-						<button name="assetmanager_sign" states="networkmanger2" string="资产管理员签名" class="oe_highlight"/>
-						<button name="facilitymanager_sign" states="assetmanager" string="设施管理员签名" class="oe_highlight"/>
+						<!--<button name="device_manager_sign" type="object" states="draft" string="设备管理员签名" context="{'role':'networkmanager','nextstate':'networkmanager'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="networkmanager" string="网络管理员签名" context="{'role':'networkmanager','nextstate':'machineroommanager'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="devicemanager" string="机房管理员签名" context="{'role':'machineroommanager','nextstate':'machineroomwatchkeeper'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="machineroommanager" string="机房值班员签名" context="{'role':'machineroomwatchkeeper','nextstate':'devicemanager2'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="machineroomwatchkeeper" string="设备理员签名" context="{'role':'devicemanager2','nextstate':'networkmanger2'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="devicemanager2" string="网络管理员签名" context="{'role':'networkmanger2','nextstate':'assetmanager'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="networkmanger2" string="资产管理员签名" context="{'role':'assetmanager','nextstate':'facilitymanager'}" class="oe_highlight"/>
+						<button name="device_manager_sign" type="object" states="assetmanager" string="设施管理员签名" context="{'role':'facilitymanager','nextstate':'done'}" class="oe_highlight"/>
 						<button name="done" states="facilitymanager" string="完成上架" class="oe_highlight"/>
 						<field name="state" widget="statusbar" statusbar_visible="devicemanager,networkmanager,machineroommanager,machineroomwatchkeeper,devicemanager2,networkmanger2,assetmanager,facilitymanager"/>
+						-->
+						<button name="device_manager_sign" type="object" states="draft" string="设备理员签名" context="{'role':'devicemanager2','nextstate':'networkmanger2'}" class="oe_highlight"/>
+						<button name="network_manager_sign" type="object" states="devicemanager" string="网络管理员签名" context="{'role':'networkmanager','nextstate':'machineroommanager'}" class="oe_highlight"/>
+						<button name="machineroom_manager_sign" type="object" states="networkmanager" string="机房管理员签名" context="{'role':'machineroommanager','nextstate':'machineroomwatchkeeper'}" class="oe_highlight"/>
+						<button name="machineroom_watchkeeper_sign" type="object" states="machineroommanager" string="机房值班员签名" context="{'role':'machineroomwatchkeeper','nextstate':'devicemanager2'}" class="oe_highlight"/>
+						<button name="device2_manager_sign" type="object" states="machineroomwatchkeeper" string="设备理员签名" context="{'role':'devicemanager2','nextstate':'networkmanger2'}" class="oe_highlight"/>
+						<button name="network2_manager_sign" type="object" states="devicemanager2" string="网络管理员签名" context="{'role':'networkmanger2','nextstate':'assetmanager'}" class="oe_highlight"/>
+						<button name="asset_manager_sign" type="object" states="networkmanger2" string="资产管理员签名" context="{'role':'assetmanager','nextstate':'facilitymanager'}" class="oe_highlight"/>
+						<button name="facility_manager_sign" type="object" states="assetmanager" string="设施管理员签名" context="{'role':'facilitymanager','nextstate':'done'}" class="oe_highlight"/>
+						<button name="done" states="facilitymanager" type="object" string="完成上架" class="oe_highlight"/>
+						<field name="state" widget="statusbar" statusbar_visible="devicemanager,networkmanager,machineroommanager,machineroomwatchkeeper,devicemanager2,networkmanger2,assetmanager,facilitymanager,done"/>
 					</header>
 					<sheet>
 						<group col="4">
 							<field name="name"/>
 							<field name="applydate"/>
 							<field name="asset_id"/>
+							<field name="state"/>
 						</group>
 						<group col="4">
 							<field name="machine" string="机房"/>

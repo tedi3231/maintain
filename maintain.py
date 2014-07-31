@@ -21,9 +21,63 @@ class maintain_putaway(osv.osv):
     _description = "putaway"
 
     def device_manager_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("devicemanager"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'devicemanager'})
+
+    def network_manager_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("networkmanager"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'networkmanager'})
+    
+    def machineroom_manager_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("machineroommanager"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'machineroommanager'})
+    
+    def machineroom_watchkeeper_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("machineroomwatchkeeper"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'machineroomwatchkeeper'})
+
+    def device2_manager_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("devicemanager2"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'devicemanager2'})
+
+    def network2_manager_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("networkmanger2"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'networkmanger2'})
+
+    def asset_manager_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("assetmanager"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'assetmanager'})
+
+    def facility_manager_sign(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("facilitymanager"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'facilitymanager'})
+
+    def done(self,cr,uid,ids,context=None):
+        operation_rep = self.pool.get("maintain.putaway.log")
+        id = ids and ids[0]
+        operation_rep.create(cr,uid,{"putaway_id":id,"operation":OPERATIONS.get("done"),"responsible":uid},context=context)    
+        return self.write(cr,uid,ids,{'state':'done'})
+    """def device_manager_sign(self,cr,uid, ids,context=None):
         #print "device_manager_sign called"
         print "context is %s" % context
         state = context.get("nextstate")
+        #current state
         role = context.get("role")
         operation = OPERATIONS.get(role)
         
@@ -31,7 +85,7 @@ class maintain_putaway(osv.osv):
         id = ids and ids[0]
         operation_rep.create(cr,uid,{"putaway_id":id,"operation":operation,"responsible":uid},context=context)    
         return self.write(cr,uid,ids,{"state":state})
-
+    """
 
     _columns = {
         "name":fields.char(string="ProcessId",size=100,required=True),
