@@ -165,27 +165,94 @@ maintain_putaway_log()
 class maintain_repairorder(osv.osv):
     _name = "maintain.repairorder"
     _description = "work order for employee"
+    
+    def act_approved(self,cr,uid,ids,context=None):
+        return self.write(cr,uid,ids,{'state':'confirmed','fault_sign':uid},context=context)
+
+    def act_finish_repair(self,cr,uid,ids,context=None):
+        return self.write(cr,uid,ids,{'state':'repair','result_sign':uid},context=context)
+
+    def act_finish_check(self,cr,uid,ids,context=None):
+        return self.write(cr,uid,ids,{'state':'check','checksign':uid},context=context)
+
+    def act_finish_result(self,cr,uid,ids,context=None):
+        return self.write(cr,uid,ids,{'state':'resultcheck'},context=context)
+
+    def act_done(self,cr,uid,ids,context=None):
+        return self.write(cr,uid,ids,{'state':'done'},context=context)
+
+    def get_repair_time(self,cr,uid,ids,field,arg,context=None):
+        res = dict.fromkeys(ids,None)
+        for id in ids:
+            res[id] =200
+        return res
 
     _columns = {
         "name":fields.char(string="Repair Order", size=100,required=True),
-        "maintainer":fields.many2one("hr.employee",string="Maintainer"),
-        "assettorepair":fields.many2one("cmdb.asset",string="Asset to repair"),
-        "operations":fields.one2many("maintain.repairorder.line","repairorder_id",string="Operations"),
+        "apply_time":fields.datetime(string="Apply Date",required=True),
+        "asset_id":fields.many2one("cmdb.asset",string="Asset To Repaire"),
+        #"asset_name":fields.related("asset_id","name",type="char",string="Asset Name"),
+        #"asset_code":fields.related("asset_id","code",type="char",string="Asset Code"),
+        "fault_time":fields.datetime(string="Fault Time",required=True),
+        "fault_level":fields.selection([("rightnow","立即处理"),("aftershutdown","停机后处理"),("whenmaintain","保养过程中维修"),("other","其他情况")],string="Fault Level"),
+        "fault_description":fields.text(string="Fault Description"),
+        "fault_sign":fields.many2one("hr.employee",string="故障申请人"),
+
+        "fault_reason":fields.selection([("operationerror","操作失误"),("qualityerror","采购配置质量问题"),("maintainovertime","超期保养"),("electricerror","电气故障")],string="Fault Reason"),
+        "method_result":fields.text(string="处理方法及结果"),
+        "need_products":fields.one2many("maintain.repairorder.line","repairorder_id",string="涉及的备件"),
+        "result_sign":fields.many2one("hr.employee",string="处理方案签字"),
+
+        "repair_start":fields.datetime(string ="Repair start",),
+        "repair_end":fields.datetime(string="Repair end"),
+        "repair_time":fields.function(get_repair_time,string="维修时间"),
+        "checks":fields.one2many("maintain.repairorder.check","maintain_repairorder_id",string="验收数据"),
+        "checkresult":fields.text(string="验收结果"),
+        "checksign":fields.many2one("hr.employee",string="验收人"),
+        
+        "fault_analyze":fields.text(string="故障原因分析及结果评定"),
+
+        "prevents":fields.one2many("maintain.repairorder.prevent","repairorder_id",string="再发防止改善措施"),
         "remark":fields.text(string="Remark"),
         "state":fields.selection([
-            ('draft', 'Quotation'),
-            ('cancel', 'Cancelled'),
-            ('confirmed', 'Confirmed'),
-            ('under_repair', 'Under Repair'),
-            ('ready', 'Ready to Repair'),
-            ('done', 'Repaired')
+            ('draft', '等待审批'),
+            ('cancel', '取消申请'),
+            ('confirmed', '审批通过'),
+            ('repair','开始维修'),
+            ('check', '验收通过'),
+            ('resultcheck', '结果评定'),
+            ('done', '维修完成')
             ],string="State"),
     }
 
     _defaults = {
         "state": lambda *a : "draft",
+        "fault_level":lambda *a:"rightnow",
+        "apply_time":lambda self,cr,uid,context:datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
     }
 maintain_repairorder()
+
+class maintain_repairorder_prevent(osv.osv):
+    _name = "maintain.repairorder.prevent"
+    _columns = {
+        "name":fields.char(string="Position"),
+        "repairorder_id":fields.many2one("maintain.repairorder",string="修理单"),
+        "asset_id":fields.many2one("cmdb.asset",string="设备"),
+        "method":fields.char(string="预防措施", size=500 ),
+        "plan_time":fields.datetime(string="计划时间"),
+        "finish_time":fields.datetime(string="完成时间"),
+        "duty_officer":fields.many2one("hr.employee",string="责任人"),
+    }
+maintain_repairorder_prevent()
+
+class maintain_repairorder_check(osv.osv):
+    _name="maintain.repairorder.check"
+    _columns = {
+        "name":fields.char(string="验收项",size=100,required=True),
+        "maintain_repairorder_id":fields.many2one("maintain.repairorder",string="维修单"),
+        "result":fields.selection([("ok","正常"),("notok","不正常")],string="验收结果"),
+    }
+maintain_repairorder_check()
 
 class maintain_repairorder_line(osv.osv):
     _name = "maintain.repairorder.line"
@@ -195,6 +262,7 @@ class maintain_repairorder_line(osv.osv):
         "repairorder_id":fields.many2one("maintain.repairorder","Repair Order Refence",ondelete="cascade",select=True),
         "type":fields.selection([("add","Add"),("remove","Remove")],string="Type",required=True),
         "product_id":fields.many2one("product.product","Product",required=True),
+        "product_qty":fields.integer(string="Product Qty"),
         "operation_time":fields.datetime(string="Operation Time"),
     }
     _defaults = {

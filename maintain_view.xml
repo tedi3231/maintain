@@ -152,33 +152,100 @@
 			</field>
 		</record>
 
+		<record id="maintain_repairorder_list" model="ir.ui.view">
+			<field name="name">maintain.repairorder.list</field>
+			<field name="model">maintain.repairorder</field>
+			<field name="arch" type="xml">
+				<tree string="Repairorders" version="7.0">
+					<field name="name"/>
+					<field name="asset_id"/>
+					<field name="apply_time"/>
+					<field name="fault_time"/>
+					<field name="fault_level"/>
+					<field name="fault_reason"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
 
 		<record id="maintain_repairorder_form" model="ir.ui.view">
 			<field name="name">maintain.repairorder.form</field>
 			<field name="model">maintain.repairorder</field>
 			<field name="arch" type="xml">
 				<form string="Repair Order" version="7.0">
+					<header>
+						<button name="act_approved" states="draft" type="object" string="审批通过" class="oe_highlight"/>
+						<button name="act_finish_repair" states="confirmed" type="object" string="开始维修" class="oe_highlight"/>
+						<button name="act_finish_check" states="repair" type="object" string="验收通过" class="oe_highlight"/>
+						<button name="act_finish_result" states="check" type="object" string="结果评定" class="oe_highlight"/>
+						<button name="act_done" states="resultcheck" type="object" string="维修完成" class="oe_highlight"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,confirmed,repair,check,resultcheck,done"/>
+					</header>
 					<sheet>
 						<group col="4">
 							<field name="name"/>
-							<field name="maintainer"/>
-							<field name="assettorepair"/>
+							<field name="apply_time"/>
+							<field name="asset_id"/>
+							<!--<field name="asset_name"/>
+							<field name="asset_code"/>-->
+							<field name="fault_time"/>
+							<field name="fault_level"/>
+							<field name="fault_reason"/>
 						</group>
-						<group col="4" string="Remark">
-							<field name="remark" placeholder="Remark...." colspan="4" nolabel="1"/>
+						<group col="4" string="故障现象">
+							<field name="fault_description" nolabel="1" colspan="4"/>
 						</group>
 						<notebook>
-							<page string="Operations">
-								<field name="operations">
-									<tree string="Operations" version="7.0" editable="bottom">
+							<page string="处理方法及结果">
+								<group col="4" string="处理方法及结果">
+									<field name="method_result" nolabel="1" colspan="4"/>
+								</group>
+								<group col="4" string="处理方案签字">
+									<field name="result_sign" colspan="4" nolabel="1"/>
+								</group>
+								<field name="need_products">
+									<tree string="涉及的备件" version="7.0" editable="bottom">
+										<field name="name"/>
 										<field name="type"/>
 										<field name="product_id"/>
-										<field name="name"/>
+										<field name="product_qty"/>
 										<field name="operation_time"/>
 									</tree>
 								</field>						
 							</page>
+							<page string="维修时间">
+								<group col="4">
+									<field name="repair_start"/>
+									<field name="repair_end"/>
+									<field name="repair_time"/>
+									<field name="checksign"/>
+								</group>
+								<group col="4" string="验收结果">
+									<field name="checkresult" nolabel="1" colspan="4"/>
+								</group>
+								<field name="checks">
+									<tree string="验收数据" version="7.0" editable="bottom">
+										<field name="name"/>
+										<field name="result"/>
+									</tree>
+								</field>
+							</page>
+							<page string="再发防止改善措施">
+								<field name="prevents">
+									<tree version="7.0" string="再发防止改善措施">
+										<field name="name"/>
+										<field name="asset_id"/>
+										<field name="method"/>
+										<field name="plan_time"/>
+										<field name="finish_time"/>
+										<field name="duty_officer"/>
+									</tree>
+								</field>
+							</page>
 						</notebook>
+						<group col="4" string="Remark">
+							<field name="remark" placeholder="Remark...." colspan="4" nolabel="1"/>
+						</group>
 					</sheet>	
 				</form>
 			</field>
