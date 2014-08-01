@@ -156,7 +156,7 @@
 			<field name="name">maintain.repairorder.list</field>
 			<field name="model">maintain.repairorder</field>
 			<field name="arch" type="xml">
-				<tree string="Repairorders" version="7.0">
+				<tree string="Repairorders" version="7.0" colors="red:state=='draft';blue:state=='done';">
 					<field name="name"/>
 					<field name="asset_id"/>
 					<field name="apply_time"/>
